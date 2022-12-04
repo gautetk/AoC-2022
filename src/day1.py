@@ -13,8 +13,10 @@ def main():
 
 
 def parse(input):
-    return [sum([int(cal) for cal in elf.split('\n')]) for elf in input.split('\n\n')]
+    return [calCount(elf) for elf in input.split('\n\n')]
 
+def calCount(elf):
+    return sum([int(cal) for cal in elf.split('\n')])
 
 if __name__ == '__main__':
     main()

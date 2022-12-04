@@ -15,34 +15,31 @@ def main():
 
 
 def part1_fn(sacks):
-    unique = [intersect(splitInTwo(sack)) for sack in sacks]
-    return functools.reduce(lambda v, letter: v + letterToInt(letter), unique, 0)
-
-
-def splitInTwo(sack):
-    return (sack[:len(sack)//2], sack[len(sack)//2:])
+    count = 0
+    for sack in sacks:
+        compartments = [
+            set(sack[:len(sack)//2]),
+            set(sack[len(sack)//2:]),
+        ]
+        letter = set.intersection(*compartments)
+        count += letterToInt(list(letter)[0])
+    return count
 
 
 def part2_fn(sacks):
-    groups = [sacks[i:i + 3] for i in range(0, len(sacks), 3)]
-    badges = [intersect(group) for group in groups]
-    return functools.reduce(lambda a, b: a + letterToInt(b), badges, 0)
-
-
-def intersect(listOfStrings):
-    intersection = functools.reduce(
-        lambda a, b: a & set(b),
-        listOfStrings[1:],
-        set(listOfStrings[0])
-    )
-    return list(intersection)[0]
+    count = 0
+    for i in range(0, len(sacks), 3):
+        group = [set(elf) for elf in sacks[i:i + 3]]
+        letter = set.intersection(*group)
+        count += letterToInt(list(letter)[0])
+    return count
 
 
 def letterToInt(l):
     if l.isupper():
-        return ord(l) - 38
+        return ord(l) - ord('A') + 27
     else:
-        return ord(l) - 96
+        return ord(l) - ord('a') + 1
 
 
 if __name__ == '__main__':
