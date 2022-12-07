@@ -1,3 +1,5 @@
+from functools import reduce
+
 
 def main():
     with open('resources/day7.txt') as r:
@@ -16,14 +18,17 @@ def main():
 
 
 def findFiles(commands):
-    pwd = ['/']
-    files = []
-    for c, *lines in commands:
-        if c[0] == 'cd':
-            pwd = cd(c[1], pwd)
-        elif c[0] == 'ls':
-            files += ls(pwd, lines)
-    return files
+    state = reduce(updateState, commands, {'pwd': ['/'], 'files': []})
+    return state['files']
+
+
+def updateState(state, command):
+    c, *lines = command
+    if c[0] == 'cd':
+        state['pwd'] = cd(c[1], state['pwd'])
+    elif c[0] == 'ls':
+        state['files'] = state['files'] + ls(state['pwd'], lines)
+    return state
 
 
 def folderSizes(files):
